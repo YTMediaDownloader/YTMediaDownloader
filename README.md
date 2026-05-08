@@ -4,6 +4,13 @@ A modern, fully-featured desktop application for downloading high-quality audio 
 
 > **Project Status**: This project is considered **feature-complete** as of v2.0. It is stable and fully functional. While active development has concluded, community contributions and feature requests are welcome — feel free to [open an Issue](https://github.com/YTMediaDownloader/YTMediaDownloader/issues) on GitHub.
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/main_ui.png" width="45%" />
+  <img src="screenshots/settings_ui.png" width="45%" />
+</p>
+
 ## ✨ Features
 
 ### Core Engine
