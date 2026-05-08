@@ -519,14 +519,23 @@ class App(ctk.CTk):
         self.progress_bar.set(percent)
         self.status_label.configure(text=text)
 
-    def cleanup_stray_thumbnails(self):
-        """Remove leftover thumbnail files that yt-dlp leaves behind."""
+    def _snapshot_images(self):
+        """Snapshot all image files currently in the output folder."""
+        existing = set()
         for ext in ('*.jpg', '*.webp', '*.png'):
             for f in glob.glob(os.path.join(self.output_dir, ext)):
-                try:
-                    os.remove(f)
-                except OSError:
-                    pass
+                existing.add(f)
+        return existing
+
+    def cleanup_stray_thumbnails(self, pre_existing):
+        """Remove only NEW thumbnail files that yt-dlp created during download."""
+        for ext in ('*.jpg', '*.webp', '*.png'):
+            for f in glob.glob(os.path.join(self.output_dir, ext)):
+                if f not in pre_existing:
+                    try:
+                        os.remove(f)
+                    except OSError:
+                        pass
 
     def download_thread(self, urls):
         """Process a list of URLs sequentially (batch queue)."""
@@ -541,9 +550,10 @@ class App(ctk.CTk):
             self.after(0, self.update_progress, 0.0,
                        f"{self._batch_prefix}Starting... → {self.output_dir}")
             try:
+                pre_existing = self._snapshot_images()
                 with yt_dlp.YoutubeDL(opts) as ydl:
                     ydl.download([url])
-                self.cleanup_stray_thumbnails()
+                self.cleanup_stray_thumbnails(pre_existing)
             except Exception as e:
                 self.after(0, self.update_progress, 0.0,
                            f"{self._batch_prefix}Failed: {str(e)}")
