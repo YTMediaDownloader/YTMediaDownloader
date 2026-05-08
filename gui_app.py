@@ -9,7 +9,8 @@ import urllib.request
 import webbrowser
 from packaging import version # We might need this, or just string comparison
 
-VERSION = "1.2.0"
+VERSION = "1.3.0"
+HISTORY_FILE = os.path.join(os.getcwd(), '.download_history.txt')
 REPO_URL = "https://api.github.com/repos/YTMediaDownloader/YTMediaDownloader/releases/latest"
 RELEASES_PAGE = "https://github.com/YTMediaDownloader/YTMediaDownloader/releases"
 
@@ -21,7 +22,7 @@ class App(ctk.CTk):
         super().__init__()
 
         self.title("YT Media Downloader")
-        self.geometry("700x550")
+        self.geometry("700x620")
         self.resizable(False, False)
 
         self.output_dir = os.path.join(os.getcwd(), "downloads")
@@ -89,6 +90,16 @@ class App(ctk.CTk):
         self.quality_dropdown = ctk.CTkOptionMenu(self.left_frame, variable=self.quality_var, values=["Original Stream", "320", "256", "192", "128"])
         self.quality_dropdown.pack(pady=5, padx=20, fill="x")
 
+        # Video Resolution (only visible when Video mode is selected)
+        self.resolution_label = ctk.CTkLabel(self.left_frame, text="Video Resolution:")
+        self.resolution_label.pack(pady=(10, 0), padx=20, anchor="w")
+        self.resolution_var = ctk.StringVar(value="Best Available")
+        self.resolution_dropdown = ctk.CTkOptionMenu(self.left_frame, variable=self.resolution_var, values=["Best Available", "4K (2160p)", "1440p", "1080p", "720p", "480p"])
+        self.resolution_dropdown.pack(pady=5, padx=20, fill="x")
+        # Start disabled since Audio is default
+        self.resolution_label.configure(text_color="gray40")
+        self.resolution_dropdown.configure(state="disabled")
+
         # ==========================================
         # RIGHT COLUMN: Advanced Toggles
         # ==========================================
@@ -106,6 +117,10 @@ class App(ctk.CTk):
         self.metadata_var = ctk.BooleanVar(value=True)
         self.metadata_switch = ctk.CTkSwitch(self.right_frame, text="Auto-Tag Metadata", variable=self.metadata_var)
         self.metadata_switch.pack(pady=10, padx=20, anchor="w")
+
+        self.smart_skip_var = ctk.BooleanVar(value=True)
+        self.smart_skip_switch = ctk.CTkSwitch(self.right_frame, text="Smart Skip (Skip Duplicates)", variable=self.smart_skip_var)
+        self.smart_skip_switch.pack(pady=10, padx=20, anchor="w")
 
         # Speed Limit
         self.speed_label = ctk.CTkLabel(self.right_frame, text="Speed Limit (e.g. 5M, 500K):")
@@ -136,12 +151,17 @@ class App(ctk.CTk):
         self.status_label.pack()
 
     def update_ui_state(self, *args):
-        # Disable audio-specific options if video is selected
         if self.media_var.get() == "video":
+            # Disable audio options, enable video options
             self.format_dropdown.configure(state="disabled")
             self.quality_dropdown.configure(state="disabled")
+            self.resolution_dropdown.configure(state="normal")
+            self.resolution_label.configure(text_color="white")
         else:
+            # Enable audio options, disable video options
             self.format_dropdown.configure(state="normal")
+            self.resolution_dropdown.configure(state="disabled")
+            self.resolution_label.configure(text_color="gray40")
             fmt = self.format_var.get()
             if "Lossless" in fmt:
                 self.quality_dropdown.configure(state="disabled")
@@ -166,6 +186,10 @@ class App(ctk.CTk):
             'progress_hooks': [self.yt_dlp_hook],
             'allow_playlist_files': False,
         }
+
+        # Smart Skip: use yt-dlp's built-in download archive
+        if self.smart_skip_var.get():
+            opts['download_archive'] = HISTORY_FILE
         
         # When compiled to an EXE, PyInstaller extracts files to a temp _MEIPASS folder
         if getattr(sys, 'frozen', False):
@@ -190,7 +214,20 @@ class App(ctk.CTk):
         auto_meta = self.metadata_var.get()
 
         if media == "video":
-            opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
+            # Build format string based on resolution selection
+            res = self.resolution_var.get()
+            res_map = {
+                "4K (2160p)": 2160,
+                "1440p": 1440,
+                "1080p": 1080,
+                "720p": 720,
+                "480p": 480,
+            }
+            if res in res_map:
+                h = res_map[res]
+                opts['format'] = f'bestvideo[height<={h}][ext=mp4]+bestaudio[ext=m4a]/best[height<={h}][ext=mp4]/best[height<={h}]'
+            else:
+                opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
             if embed_art:
                 opts['writethumbnail'] = True
                 postprocessors.append({'key': 'FFmpegThumbnailsConvertor', 'format': 'jpg'})
