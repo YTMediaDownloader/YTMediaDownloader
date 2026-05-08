@@ -7,8 +7,8 @@ A modern, fully-featured desktop application for downloading high-quality audio 
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/main_ui.png" width="45%" />
-  <img src="screenshots/settings_ui.png" width="45%" />
+  <img src="screenshots/app_main.png" width="45%" />
+  <img src="screenshots/app_settings.png" width="45%" />
 </p>
 
 ## ✨ Features
