@@ -1,64 +1,36 @@
 # YT Media Downloader 🚀
 
-A modern, fully-featured desktop application for downloading high-quality audio and video from YouTube. Built with a sleek customizable UI, multi-threading for flawless performance, and an open-source backbone that guarantees zero ads, zero trackers, and zero sketchy web conversions.
+A modern, standalone desktop application for downloading high-quality audio and video from YouTube. Built with a sleek dark-mode UI, multi-threading for flawless performance, and an open-source backbone that guarantees zero ads, zero trackers, and zero sketchy web conversions.
 
-> **Project Status**: This project is considered **feature-complete** as of v2.0. It is stable and fully functional. While active development has concluded, community contributions and feature requests are welcome — feel free to [open an Issue](https://github.com/YTMediaDownloader/YTMediaDownloader/issues) on GitHub.
+## ✨ Key Features
 
-## ✨ Features
-
-### Core Engine
-- **Pristine Audio Quality**: Directly extracts YouTube's native high-quality audio streams (AAC/Opus) without forcing destructive MP3 compression.
-- **Universal Support**: Paste a single video, a massive 500-video playlist, or a mix of both. The engine detects and handles everything automatically.
+- **Pristine Audio Quality**: Directly extracts YouTube's native high-quality audio streams (AAC/Opus) without forcing destructive MP3 compression, ensuring you get the absolute best 1:1 audio quality possible.
+- **Universal Support**: Paste a link to a single video, or paste a link to a massive 500-video playlist. The engine automatically detects it and handles the rest.
 - **Lossless & Lossy Formats**: Choose between M4A, MP3, OPUS, FLAC, and WAV.
-- **Video Downloads**: Full MP4 video support with a resolution selector (4K, 1440p, 1080p, 720p, 480p).
+- **Auto-Metadata Tagging**: Automatically parses YouTube titles (e.g., `Artist - Song`) and embeds the Artist and Title perfectly into the file's ID3 metadata for flawless syncing to Spotify Local Files and Apple Music.
+- **Album Art Embedding**: With a single toggle, the app will grab the high-resolution YouTube video thumbnail and permanently embed it as the track's official cover art.
+- **Background Auto-Retry**: Built-in network resilience. If a fragment drops or YouTube temporarily throttles your connection, the app automatically waits and retries without failing the download.
+- **Speed Limiter**: Built-in throttle control so you can download massive playlists in the background without lagging your games or streams.
 
-### Smart Features
-- **Batch Queue System**: Paste multiple URLs at once (one per line) and the app will process them all sequentially — no babysitting required.
-- **Smart Skip Database**: The app remembers every video you've downloaded. Re-run a playlist and it instantly skips existing tracks, only grabbing the new ones.
-- **Auto-Metadata Tagging**: Automatically parses YouTube titles (e.g., `Artist - Song`) and embeds Artist/Title into ID3 metadata for seamless library integration.
-- **Album Art Embedding**: Grabs the high-resolution video thumbnail, converts it to JPEG, and permanently embeds it as the track's cover art.
-- **Custom Filename Templates**: Choose from presets (`Title`, `Uploader - Title`, `Numbered`) or define your own naming pattern using yt-dlp tags.
+## 🛠️ The Tech Stack
 
-### User Experience
-- **Live Progress Stats**: Real-time download speed, ETA, and playlist progress counter displayed in the status bar.
-- **In-App Update Notifications**: Automatically checks GitHub for new releases on startup and notifies you with one click to the download page.
-- **Personalization Suite**: Full Settings window with Dark/Light/System theme toggle, 6 accent color presets, custom HEX input, and a native color picker.
-- **Persistent Settings**: All preferences (theme, colors, toggles, output folder) are saved to `config.json` and restored automatically on startup.
-- **Speed Limiter**: Built-in throttle control so you can download in the background without affecting your network.
-- **Background Auto-Retry**: Built-in network resilience with automatic retries on dropped fragments.
+This app was built using the following open-source technologies:
 
-## 🛠️ Tech Stack
+- **`customtkinter`**: Powers the gorgeous, modern Windows 11-style dark mode GUI.
+- **`yt-dlp`**: The gold-standard backend engine for extracting media from YouTube.
+- **`ffmpeg`**: The heavy-lifting background processor used to cleanly convert audio streams and embed album artwork.
+- **`mutagen`**: A specialized Python library used to safely inject metadata tags and album art into audio files without corrupting them.
+- **`PyInstaller`**: Used to compile the entire project (and its 200MB of dependencies) into a single, portable `.exe` file that works on any PC out of the box.
 
-| Technology | Purpose |
-|---|---|
-| **customtkinter** | Modern Windows 11-style dark/light mode GUI |
-| **yt-dlp** | Gold-standard backend engine for media extraction |
-| **FFmpeg** | Audio/video conversion and thumbnail processing |
-| **mutagen** | Safe metadata and album art injection |
-| **PyInstaller** | Compiles everything into a single portable `.exe` |
+## 🎮 How to Use It
 
-## 🎮 How to Use
-
-1. **Launch**: Run `YT_Media_Downloader.exe`.
-2. **Paste**: Drop any YouTube URL(s) into the text box — one per line for batch downloads.
-3. **Configure**:
-   - Pick **Audio** or **Video** mode.
-   - Choose your format, bitrate, or video resolution.
-   - Toggle Album Art, Metadata, and Smart Skip on/off.
-   - Set a custom filename template if desired.
-4. **Download**: Hit `START DOWNLOAD` and watch the live progress stats. The UI stays perfectly smooth via multi-threading.
-5. **Personalize**: Click the ⚙ gear icon to change themes and accent colors.
-
-## 📋 Version History
-
-| Version | Highlights |
-|---|---|
-| **v2.0.x** | Batch Queue, Custom Naming, Settings Window, Theme Engine, Accent Colors |
-| **v1.3.0** | Smart Skip Database, Video Resolution Selector |
-| **v1.2.0** | In-App Update Notifications |
-| **v1.1.0** | Live Progress Stats (Speed/ETA), M4A Thumbnail Fix |
-| **v1.0.1** | Per-video playlist thumbnail fix |
-| **v1.0.0** | Initial release |
+1. **Launch the App**: Run `YT_Media_Downloader.exe`.
+2. **Paste your Link**: Drop any YouTube URL (video or playlist) into the top bar.
+3. **Select your Settings**:
+   - Pick Audio or Video.
+   - Choose your format (M4A is highly recommended for standard listening).
+   - Toggle Album Art and Auto-Metadata on/off.
+4. **Download**: Hit the massive `START DOWNLOAD` button and watch the progress bar do its thing. The app uses multi-threading, meaning the UI stays perfectly smooth while the engine churns in the background!
 
 ---
 

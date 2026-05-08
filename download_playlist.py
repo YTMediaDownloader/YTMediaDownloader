@@ -11,7 +11,7 @@ console = Console()
 #                   YT Media Downloader
 # ============================================================
 
-DEFAULT_URL = "https://www.youtube.com/playlist?list=PLNyPiL5e4F2bo2ruSM_ivlbH5xrXMSF7f"
+DEFAULT_URL = ""  # No default — user must provide a URL
 
 AUDIO_FORMATS = {
     "1": {"name": "M4A (AAC)",       "codec": "m4a",  "lossy": True,  "qualities": ["64", "128", "192", "256"]},
@@ -111,10 +111,11 @@ def download_media(url, ydl_opts):
 
 def prompt_url():
     console.print("\n[bold]--- Step 1: URL ---[/bold]")
-    url = input(f"Enter Playlist/Video URL (Press Enter for default playlist):\n> ").strip()
-    if not url:
-        url = DEFAULT_URL
-        console.print("   [dim]Using default playlist.[/dim]")
+    url = ""
+    while not url:
+        url = input(f"Enter Playlist/Video URL:\n> ").strip()
+        if not url:
+            console.print("   [red]A URL is required. Please paste a YouTube link.[/red]")
     return url
 
 def prompt_media_type():
@@ -260,7 +261,10 @@ def run_interactive_menu():
 def run_legacy_mode(url=None, out_dir="downloads"):
     console.print("\n[bold yellow]--- Running in Legacy Mode (Quick M4A) ---[/bold yellow]")
     if not url:
-        url = DEFAULT_URL
+        url = input("Enter Playlist/Video URL:\n> ").strip()
+    if not url:
+        console.print("[red]No URL provided. Exiting.[/red]")
+        return
     ydl_opts = build_ydl_options(out_dir, "audio", audio_format_key="1", quality=None, embed_thumbnail=False, speed_limit=None, auto_metadata=False)
     download_media(url, ydl_opts)
 
