@@ -9,7 +9,7 @@ import urllib.request
 import webbrowser
 from packaging import version
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 HISTORY_FILE = os.path.join(os.getcwd(), '.download_history.txt')
 CONFIG_FILE = os.path.join(os.getcwd(), 'config.json')
 REPO_URL = "https://api.github.com/repos/YTMediaDownloader/YTMediaDownloader/releases/latest"
@@ -222,10 +222,12 @@ class App(ctk.CTk):
 
         # Media Type
         self.media_var = ctk.StringVar(value="audio")
-        ctk.CTkRadioButton(self.left_frame, text="Audio Only", variable=self.media_var,
-                           value="audio", command=self.update_ui_state).pack(pady=4, padx=20, anchor="w")
-        ctk.CTkRadioButton(self.left_frame, text="Video (MP4)", variable=self.media_var,
-                           value="video", command=self.update_ui_state).pack(pady=4, padx=20, anchor="w")
+        self.radio_audio = ctk.CTkRadioButton(self.left_frame, text="Audio Only", variable=self.media_var,
+                           value="audio", command=self.update_ui_state)
+        self.radio_audio.pack(pady=4, padx=20, anchor="w")
+        self.radio_video = ctk.CTkRadioButton(self.left_frame, text="Video (MP4)", variable=self.media_var,
+                           value="video", command=self.update_ui_state)
+        self.radio_video.pack(pady=4, padx=20, anchor="w")
 
         # Audio Format
         ctk.CTkLabel(self.left_frame, text="Audio Format:").pack(pady=(10, 0), padx=20, anchor="w")
@@ -259,16 +261,19 @@ class App(ctk.CTk):
 
         # Toggles
         self.album_art_var = ctk.BooleanVar(value=self.settings.get("album_art", True))
-        ctk.CTkSwitch(self.right_frame, text="Embed Album Art",
-                      variable=self.album_art_var).pack(pady=6, padx=20, anchor="w")
+        self.switch_art = ctk.CTkSwitch(self.right_frame, text="Embed Album Art",
+                      variable=self.album_art_var)
+        self.switch_art.pack(pady=6, padx=20, anchor="w")
 
         self.metadata_var = ctk.BooleanVar(value=self.settings.get("metadata", True))
-        ctk.CTkSwitch(self.right_frame, text="Auto-Tag Metadata",
-                      variable=self.metadata_var).pack(pady=6, padx=20, anchor="w")
+        self.switch_meta = ctk.CTkSwitch(self.right_frame, text="Auto-Tag Metadata",
+                      variable=self.metadata_var)
+        self.switch_meta.pack(pady=6, padx=20, anchor="w")
 
         self.smart_skip_var = ctk.BooleanVar(value=self.settings.get("smart_skip", True))
-        ctk.CTkSwitch(self.right_frame, text="Smart Skip (Skip Duplicates)",
-                      variable=self.smart_skip_var).pack(pady=6, padx=20, anchor="w")
+        self.switch_skip = ctk.CTkSwitch(self.right_frame, text="Smart Skip (Skip Duplicates)",
+                      variable=self.smart_skip_var)
+        self.switch_skip.pack(pady=6, padx=20, anchor="w")
 
         # Filename Template
         ctk.CTkLabel(self.right_frame, text="Filename Template:").pack(pady=(10, 0), padx=20, anchor="w")
@@ -336,9 +341,23 @@ class App(ctk.CTk):
         self.custom_naming_entry.configure(state="normal" if is_custom else "disabled")
 
     def apply_accent_color(self, fg_color, hover_color):
-        """Apply the accent color to the main action button and progress bar."""
+        """Apply the accent color to all interactive widgets across the app."""
+        # Main action button & progress bar
         self.download_button.configure(fg_color=fg_color, hover_color=hover_color)
         self.progress_bar.configure(progress_color=fg_color)
+
+        # Dropdowns
+        for dropdown in [self.format_dropdown, self.quality_dropdown,
+                         self.resolution_dropdown, self.naming_dropdown]:
+            dropdown.configure(fg_color=fg_color, button_color=hover_color, button_hover_color=fg_color)
+
+        # Switches
+        for switch in [self.switch_art, self.switch_meta, self.switch_skip]:
+            switch.configure(progress_color=fg_color, button_color=hover_color, button_hover_color=fg_color)
+
+        # Radio buttons
+        for radio in [self.radio_audio, self.radio_video]:
+            radio.configure(fg_color=fg_color, hover_color=hover_color)
 
     def show_settings(self):
         if self.settings_window is None or not self.settings_window.winfo_exists():
