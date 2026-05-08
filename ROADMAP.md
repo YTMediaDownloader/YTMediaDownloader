@@ -44,6 +44,9 @@ This document tracks the features developed for the **YT Media Downloader** acro
 - [x] **Persistent Settings** (v2.0.0)
   All user preferences saved to `config.json` and restored on startup.
 
+- [x] **Drag & Drop URL Input** (v2.0.0)
+  Direct browser-to-app URL queueing for faster playlist management.
+
 ---
 
 ### 💡 Community Ideas (Not Planned)
@@ -52,9 +55,6 @@ The following features are **not currently planned** but could be revisited base
 
 - [ ] **Spotify Playlist Support**
   Map Spotify playlist metadata to YouTube audio queries for seamless downloading.
-
-- [ ] **Drag & Drop URL Input**
-  Allow dragging URLs directly into the app window.
 
 - [ ] **Download History Viewer**
   A built-in UI to browse and manage the Smart Skip database.
