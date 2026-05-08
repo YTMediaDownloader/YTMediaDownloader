@@ -9,7 +9,7 @@ import urllib.request
 import webbrowser
 from packaging import version
 
-VERSION = "2.0.2"
+VERSION = "2.0.3"
 HISTORY_FILE = os.path.join(os.getcwd(), '.download_history.txt')
 CONFIG_FILE = os.path.join(os.getcwd(), 'config.json')
 REPO_URL = "https://api.github.com/repos/YTMediaDownloader/YTMediaDownloader/releases/latest"
@@ -120,7 +120,7 @@ class App(ctk.CTk):
         super().__init__()
 
         self.title("YT Media Downloader")
-        self.geometry("750x720")
+        self.geometry("750x800")
         self.resizable(False, False)
 
         self.output_dir = os.path.join(os.getcwd(), "downloads")
@@ -312,17 +312,17 @@ class App(ctk.CTk):
         self.bottom_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.bottom_frame.pack(pady=8, padx=20, fill="x")
 
+        self.status_label = ctk.CTkLabel(self.bottom_frame, text="Ready.", text_color="gray")
+        self.status_label.pack(pady=(0, 2))
+
+        self.progress_bar = ctk.CTkProgressBar(self.bottom_frame)
+        self.progress_bar.pack(pady=(2, 8), fill="x")
+        self.progress_bar.set(0)
+
         self.download_button = ctk.CTkButton(self.bottom_frame, text="START DOWNLOAD",
                                              height=50, font=ctk.CTkFont(size=16, weight="bold"),
                                              command=self.start_download_thread)
-        self.download_button.pack(pady=8, fill="x")
-
-        self.progress_bar = ctk.CTkProgressBar(self.bottom_frame)
-        self.progress_bar.pack(pady=(5, 3), fill="x")
-        self.progress_bar.set(0)
-
-        self.status_label = ctk.CTkLabel(self.bottom_frame, text="Ready.", text_color="gray")
-        self.status_label.pack()
+        self.download_button.pack(pady=5, fill="x")
 
     # =============================================
     # UI STATE MANAGEMENT
@@ -557,7 +557,7 @@ class App(ctk.CTk):
 
         self.download_button.configure(state="disabled", text="DOWNLOADING...")
         self.progress_bar.set(0)
-        self.status_label.configure(text="Initializing...", text_color="white")
+        self.status_label.configure(text="Initializing...")
 
         thread = threading.Thread(target=self.download_thread, args=(urls,))
         thread.daemon = True
