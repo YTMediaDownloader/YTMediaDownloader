@@ -1,6 +1,7 @@
 import yt_dlp
 import sys
 import os
+import glob
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, DownloadColumn, TransferSpeedColumn, TimeRemainingColumn
 from rich.console import Console
 
@@ -29,6 +30,7 @@ def build_ydl_options(output_dir, media_type, audio_format_key=None, quality=Non
         'noprogress': True,
         'retries': 3,
         'fragment_retries': 3,
+        'allow_playlist_files': False,
     }
 
     if speed_limit:

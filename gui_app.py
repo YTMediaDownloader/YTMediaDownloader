@@ -3,6 +3,7 @@ from tkinter import filedialog
 import threading
 import yt_dlp
 import os
+import glob
 
 ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -141,7 +142,8 @@ class App(ctk.CTk):
             'noprogress': True,
             'retries': 3,
             'fragment_retries': 3,
-            'progress_hooks': [self.yt_dlp_hook]
+            'progress_hooks': [self.yt_dlp_hook],
+            'allow_playlist_files': False,
         }
         
         # When compiled to an EXE, PyInstaller extracts files to a temp _MEIPASS folder
@@ -227,6 +229,17 @@ class App(ctk.CTk):
         self.progress_bar.set(percent)
         self.status_label.configure(text=text)
 
+    def cleanup_stray_thumbnails(self):
+        """Remove leftover thumbnail files that yt-dlp leaves behind.
+        These can confuse media players into showing the playlist cover
+        instead of the per-video embedded thumbnails."""
+        for ext in ('*.jpg', '*.webp', '*.png'):
+            for f in glob.glob(os.path.join(self.output_dir, ext)):
+                try:
+                    os.remove(f)
+                except OSError:
+                    pass
+
     def download_thread(self, url):
         opts = self.build_ydl_opts()
         
@@ -236,6 +249,7 @@ class App(ctk.CTk):
         try:
             with yt_dlp.YoutubeDL(opts) as ydl:
                 ydl.download([url])
+            self.cleanup_stray_thumbnails()
             self.after(0, self.finish_download, "Download Completed Successfully!", "green")
         except Exception as e:
             self.after(0, self.finish_download, f"Failed: {str(e)}", "red")
