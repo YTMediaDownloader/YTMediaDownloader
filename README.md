@@ -62,4 +62,7 @@ A modern, fully-featured desktop application for downloading high-quality audio 
 
 ---
 
+## ⚖️ Disclaimer
+This tool is intended for downloading your own uploads, content you have permission to download, public-domain media, or properly licensed content. Users are responsible for complying with YouTube's Terms of Service and copyright law.
+
 _Built transparently, locally, and safely._
