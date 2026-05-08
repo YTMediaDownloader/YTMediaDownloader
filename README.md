@@ -4,7 +4,7 @@ A modern, standalone desktop application for downloading high-quality audio and 
 
 ## ✨ Key Features
 
-- **Pristine Audio Quality**: Directly extracts YouTube's native high-quality audio streams (AAC/Opus) without forcing destructive MP3 compression, ensuring you get the absolute best 1:1 audio quality possible. 
+- **Pristine Audio Quality**: Directly extracts YouTube's native high-quality audio streams (AAC/Opus) without forcing destructive MP3 compression, ensuring you get the absolute best 1:1 audio quality possible.
 - **Universal Support**: Paste a link to a single video, or paste a link to a massive 500-video playlist. The engine automatically detects it and handles the rest.
 - **Lossless & Lossy Formats**: Choose between M4A, MP3, OPUS, FLAC, and WAV.
 - **Auto-Metadata Tagging**: Automatically parses YouTube titles (e.g., `Artist - Song`) and embeds the Artist and Title perfectly into the file's ID3 metadata for flawless syncing to Spotify Local Files and Apple Music.
@@ -15,6 +15,7 @@ A modern, standalone desktop application for downloading high-quality audio and 
 ## 🛠️ The Tech Stack
 
 This app was built using the following open-source technologies:
+
 - **`customtkinter`**: Powers the gorgeous, modern Windows 11-style dark mode GUI.
 - **`yt-dlp`**: The gold-standard backend engine for extracting media from YouTube.
 - **`ffmpeg`**: The heavy-lifting background processor used to cleanly convert audio streams and embed album artwork.
@@ -25,11 +26,12 @@ This app was built using the following open-source technologies:
 
 1. **Launch the App**: Run `YT_Media_Downloader.exe`.
 2. **Paste your Link**: Drop any YouTube URL (video or playlist) into the top bar.
-3. **Select your Settings**: 
+3. **Select your Settings**:
    - Pick Audio or Video.
    - Choose your format (M4A is highly recommended for standard listening).
    - Toggle Album Art and Auto-Metadata on/off.
 4. **Download**: Hit the massive `START DOWNLOAD` button and watch the progress bar do its thing. The app uses multi-threading, meaning the UI stays perfectly smooth while the engine churns in the background!
 
 ---
-*Built transparently, locally, and safely.*
+
+_Built transparently, locally, and safely._
