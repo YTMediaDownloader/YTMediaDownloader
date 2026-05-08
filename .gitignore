@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Downloads & User Media
+downloads/
+downloads for spotify/
+*.mp3
+*.m4a
+*.mp4
+*.flac
+*.wav
+*.opus
+
+# Huge Executables
+*.exe
