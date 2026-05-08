@@ -9,7 +9,7 @@ import urllib.request
 import webbrowser
 from packaging import version
 
-VERSION = "2.0.1"
+VERSION = "2.0.2"
 HISTORY_FILE = os.path.join(os.getcwd(), '.download_history.txt')
 CONFIG_FILE = os.path.join(os.getcwd(), 'config.json')
 REPO_URL = "https://api.github.com/repos/YTMediaDownloader/YTMediaDownloader/releases/latest"
@@ -41,6 +41,7 @@ class SettingsWindow(ctk.CTkToplevel):
         self.geometry("400x450")
         self.resizable(False, False)
         self.grab_set()
+        self.protocol("WM_DELETE_WINDOW", self.save_and_close)
 
         # ---- Appearance Section ----
         ctk.CTkLabel(self, text="Appearance", font=ctk.CTkFont(size=18, weight="bold")).pack(pady=(20, 10))
@@ -85,12 +86,14 @@ class SettingsWindow(ctk.CTkToplevel):
     def on_theme_change(self, value):
         ctk.set_appearance_mode(value)
         self.parent.settings["theme"] = value
+        self.parent.save_settings()
 
     def apply_preset(self, name):
         fg, hover = COLOR_PRESETS[name]
         self.parent.settings["accent_color"] = name
         self.parent.settings["custom_hex"] = ""
         self.parent.apply_accent_color(fg, hover)
+        self.parent.save_settings()
 
     def apply_custom_hex(self):
         hex_val = self.hex_entry.get().strip()
@@ -98,6 +101,7 @@ class SettingsWindow(ctk.CTkToplevel):
             self.parent.settings["accent_color"] = "Custom"
             self.parent.settings["custom_hex"] = hex_val
             self.parent.apply_accent_color(hex_val, hex_val)
+            self.parent.save_settings()
 
     def pick_color(self):
         color = colorchooser.askcolor(title="Choose Accent Color")
