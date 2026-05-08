@@ -1,5 +1,9 @@
+# Install dependencies: pip install -r requirements.txt
 customtkinter
 yt-dlp
 mutagen
 packaging
-tkinterdnd2
+tkinterdnd2  # Required for drag-and-drop functionality
+
+# Note: The app is designed to fall back gracefully if tkinterdnd2 is missing.
+# Legacy mode (no drag-and-drop) will trigger automatically in that case.

@@ -20,7 +20,7 @@ A modern, fully-featured desktop application for downloading high-quality audio 
 - **Video Downloads**: Full MP4 video support with a resolution selector (4K, 1440p, 1080p, 720p, 480p).
 
 ### Smart Features
-- **Batch Queue System**: Paste multiple URLs at once (one per line) and the app will process them all sequentially — no babysitting required.
+- **Batch Queue System**: Paste multiple URLs at once (one per line) or **drag-and-drop** them directly from your browser. The app processes them sequentially — no babysitting required.
 - **Smart Skip Database**: The app remembers every video you've downloaded. Re-run a playlist and it instantly skips existing tracks, only grabbing the new ones.
 - **Auto-Metadata Tagging**: Automatically parses YouTube titles (e.g., `Artist - Song`) and embeds Artist/Title into ID3 metadata for seamless library integration.
 - **Album Art Embedding**: Grabs the high-resolution video thumbnail, converts it to JPEG, and permanently embeds it as the track's cover art.
