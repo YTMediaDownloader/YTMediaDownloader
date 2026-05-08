@@ -1,30 +1,64 @@
-# 🗺️ Future Roadmap
+# 🗺️ Development Roadmap
 
-This document outlines the planned features and enhancements for future versions of the **YT Media Downloader**. 
+This document tracks the features developed for the **YT Media Downloader** across all versions.
 
-### 🌟 High-Priority Features
-
-- [ ] **Smart Skip Database**  
-  A local history log that tracks what you've downloaded. If you run a massive playlist again, it will automatically skip the videos you already have to save time and bandwidth.
-
-- [ ] **Batch Downloading (Queue System)**  
-  Change the URL input into a multi-line box so you can paste multiple different URLs at once and let the app handle them in a visual queue.
-
-- [ ] **Spotify Playlist Support**  
-  Directly convert Spotify playlist links into YouTube audio queries to download them seamlessly.
-
-### 🎯 Quality of Life Updates
-
-- [x] **Live Progress Stats** (v1.1.0)
-- [x] **M4A Thumbnail Support** (v1.1.0)
-- [ ] **Video Resolution Selector**  
-  Add granular control over video downloads to choose between 4K, 1080p, 720p, etc., instead of defaulting to the highest available.
-
-- [ ] **Custom Naming Conventions**  
-  Allow users to customize the output filename structure (e.g., `[Artist] - [Title].mp3` vs `[Title].mp3`).
-
-- [x] **In-App Auto Updater**  
-  Background checks for new GitHub releases, prompting you directly in the app when a new `.exe` is available.
+> **Status**: This project has reached **feature-complete** status as of v2.0. All planned features have been implemented and tested. Community-driven feature requests are still welcome via [GitHub Issues](https://github.com/YTMediaDownloader/YTMediaDownloader/issues).
 
 ---
-*Got a feature request? Open an Issue on GitHub!*
+
+### ✅ Completed Features
+
+- [x] **Core Download Engine** (v1.0.0)
+  High-quality audio/video extraction with format selection, bitrate control, and multi-threading.
+
+- [x] **Album Art & Metadata Embedding** (v1.0.0)
+  Automatic thumbnail-to-JPEG conversion and ID3 metadata tagging.
+
+- [x] **Per-Video Playlist Thumbnails** (v1.0.1)
+  Fixed playlist cover art overriding individual track thumbnails.
+
+- [x] **Live Progress Stats** (v1.1.0)
+  Real-time download speed, ETA, and playlist counter in the status bar.
+
+- [x] **M4A Thumbnail Support** (v1.1.0)
+  Resolved thumbnail embedding failures for M4A/AAC containers.
+
+- [x] **In-App Update Notifications** (v1.2.0)
+  Background version check against GitHub Releases with one-click redirect.
+
+- [x] **Smart Skip Database** (v1.3.0)
+  Local download archive that automatically skips previously downloaded videos.
+
+- [x] **Video Resolution Selector** (v1.3.0)
+  Granular control over video quality (4K, 1440p, 1080p, 720p, 480p).
+
+- [x] **Batch Queue System** (v2.0.0)
+  Multi-line URL input for sequential processing of multiple links.
+
+- [x] **Custom Filename Templates** (v2.0.0)
+  Preset and user-defined naming patterns using yt-dlp output tags.
+
+- [x] **Personalization Suite** (v2.0.0)
+  Settings window with Dark/Light/System themes, accent color presets, custom HEX input, and a native color picker.
+
+- [x] **Persistent Settings** (v2.0.0)
+  All user preferences saved to `config.json` and restored on startup.
+
+---
+
+### 💡 Community Ideas (Not Planned)
+
+The following features are **not currently planned** but could be revisited based on community interest:
+
+- [ ] **Spotify Playlist Support**
+  Map Spotify playlist metadata to YouTube audio queries for seamless downloading.
+
+- [ ] **Drag & Drop URL Input**
+  Allow dragging URLs directly into the app window.
+
+- [ ] **Download History Viewer**
+  A built-in UI to browse and manage the Smart Skip database.
+
+---
+
+*Have a feature idea? [Open an Issue](https://github.com/YTMediaDownloader/YTMediaDownloader/issues) on GitHub!*
