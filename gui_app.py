@@ -139,7 +139,6 @@ class App(ctk.CTk):
             'ignoreerrors': True,
             'quiet': True,
             'no_warnings': True,
-            'noprogress': True,
             'retries': 3,
             'fragment_retries': 3,
             'progress_hooks': [self.yt_dlp_hook],
@@ -172,6 +171,7 @@ class App(ctk.CTk):
             opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
             if embed_art:
                 opts['writethumbnail'] = True
+                postprocessors.append({'key': 'FFmpegThumbnailsConvertor', 'format': 'jpg'})
                 postprocessors.append({'key': 'EmbedThumbnail'})
         else:
             opts['format'] = 'bestaudio/best'
@@ -191,6 +191,7 @@ class App(ctk.CTk):
 
             if embed_art:
                 opts['writethumbnail'] = True
+                postprocessors.append({'key': 'FFmpegThumbnailsConvertor', 'format': 'jpg'})
                 postprocessors.append({'key': 'EmbedThumbnail'})
 
         if auto_meta:
@@ -208,19 +209,42 @@ class App(ctk.CTk):
             downloaded = d.get('downloaded_bytes', 0)
             
             filename = os.path.basename(d.get('filename', 'Unknown File'))
-            if len(filename) > 40:
-                filename = filename[:37] + "..."
+            if len(filename) > 35:
+                filename = filename[:32] + "..."
 
             if total > 0:
                 percent = downloaded / total
             else:
                 percent = 0
-            
-            # Use app.after to safely update GUI from background thread
-            self.after(0, self.update_progress, percent, f"Downloading: {filename}")
+
+            # Get speed and ETA from yt-dlp's formatted strings
+            speed = d.get('_speed_str', '').strip()
+            eta = d.get('_eta_str', '').strip()
+
+            # Get playlist position
+            info = d.get('info_dict', {})
+            pl_index = info.get('playlist_index') or info.get('playlist_autonumber')
+            n_entries = info.get('n_entries') or info.get('playlist_count')
+
+            # Build a rich status string
+            prefix = f"[{pl_index}/{n_entries}] " if pl_index and n_entries else ""
+            status = f"{prefix}{filename}"
+            details = []
+            if speed and speed != 'Unknown':
+                details.append(speed)
+            if eta and eta != 'Unknown':
+                details.append(f"ETA: {eta}")
+            if details:
+                status += f"  |  {' · '.join(details)}"
+
+            self.after(0, self.update_progress, percent, status)
 
         elif d['status'] == 'finished':
-            self.after(0, self.update_progress, 1.0, "Converting & Processing Metadata...")
+            info = d.get('info_dict', {})
+            pl_index = info.get('playlist_index') or info.get('playlist_autonumber')
+            n_entries = info.get('n_entries') or info.get('playlist_count')
+            prefix = f"[{pl_index}/{n_entries}] " if pl_index and n_entries else ""
+            self.after(0, self.update_progress, 1.0, f"{prefix}Converting & Embedding Metadata...")
         
         elif d['status'] == 'error':
             self.after(0, self.update_progress, 0.0, "Error occurred during download.")
@@ -246,11 +270,13 @@ class App(ctk.CTk):
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
+        self.after(0, self.update_progress, 0.0, f"Starting... → {self.output_dir}")
+
         try:
             with yt_dlp.YoutubeDL(opts) as ydl:
                 ydl.download([url])
             self.cleanup_stray_thumbnails()
-            self.after(0, self.finish_download, "Download Completed Successfully!", "green")
+            self.after(0, self.finish_download, f"✓ Complete! Saved to: {self.output_dir}", "green")
         except Exception as e:
             self.after(0, self.finish_download, f"Failed: {str(e)}", "red")
 
