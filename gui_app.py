@@ -9,7 +9,7 @@ import urllib.request
 import webbrowser
 from packaging import version
 
-VERSION = "2.0.3"
+VERSION = "2.0.0"
 HISTORY_FILE = os.path.join(os.getcwd(), '.download_history.txt')
 CONFIG_FILE = os.path.join(os.getcwd(), 'config.json')
 REPO_URL = "https://api.github.com/repos/YTMediaDownloader/YTMediaDownloader/releases/latest"
@@ -436,6 +436,10 @@ class App(ctk.CTk):
                 opts['format'] = f'bestvideo[height<={h}][ext=mp4]+bestaudio[ext=m4a]/best[height<={h}][ext=mp4]/best[height<={h}]'
             else:
                 opts['format'] = 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
+            # Metadata MUST come before thumbnail embedding to prevent stripping
+            if auto_meta:
+                opts['parse_metadata'] = ['title:%(artist)s - %(title)s']
+                postprocessors.append({'key': 'FFmpegMetadata'})
             if embed_art:
                 opts['writethumbnail'] = True
                 postprocessors.append({'key': 'FFmpegThumbnailsConvertor', 'format': 'jpg'})
@@ -451,14 +455,14 @@ class App(ctk.CTk):
                 if q_str != "Original Stream":
                     extract_pp['preferredquality'] = q_str
             postprocessors.append(extract_pp)
+            # Metadata MUST come before thumbnail embedding to prevent stripping
+            if auto_meta:
+                opts['parse_metadata'] = ['title:%(artist)s - %(title)s']
+                postprocessors.append({'key': 'FFmpegMetadata'})
             if embed_art:
                 opts['writethumbnail'] = True
                 postprocessors.append({'key': 'FFmpegThumbnailsConvertor', 'format': 'jpg'})
                 postprocessors.append({'key': 'EmbedThumbnail'})
-
-        if auto_meta:
-            opts['parse_metadata'] = ['title:%(artist)s - %(title)s']
-            postprocessors.append({'key': 'FFmpegMetadata'})
 
         if postprocessors:
             opts['postprocessors'] = postprocessors
