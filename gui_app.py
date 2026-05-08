@@ -4,6 +4,14 @@ import threading
 import yt_dlp
 import os
 import glob
+import json
+import urllib.request
+import webbrowser
+from packaging import version # We might need this, or just string comparison
+
+VERSION = "1.2.0"
+REPO_URL = "https://api.github.com/repos/YTMediaDownloader/YTMediaDownloader/releases/latest"
+RELEASES_PAGE = "https://github.com/YTMediaDownloader/YTMediaDownloader/releases"
 
 ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -16,15 +24,29 @@ class App(ctk.CTk):
         self.geometry("700x550")
         self.resizable(False, False)
 
-        # Output directory state
         self.output_dir = os.path.join(os.getcwd(), "downloads")
 
+        # Update state
+        self.update_available = False
+        self.latest_version = ""
+
         self.create_widgets()
+        
+        # Start background update check
+        threading.Thread(target=self.check_for_updates, daemon=True).start()
 
     def create_widgets(self):
         # Header
         self.header_label = ctk.CTkLabel(self, text="YT Media Downloader", font=ctk.CTkFont(size=24, weight="bold"))
-        self.header_label.pack(pady=(20, 10))
+        self.header_label.pack(pady=(20, 5))
+        
+        self.version_label = ctk.CTkLabel(self, text=f"v{VERSION}", text_color="gray")
+        self.version_label.pack(pady=(0, 5))
+
+        # Update Notification Button (Hidden by default)
+        self.update_button = ctk.CTkButton(self, text="🚀 New Update Available!", fg_color="#2ecc71", hover_color="#27ae60", 
+                                           text_color="white", height=30, command=self.open_releases)
+        # We won't pack it yet
 
         # URL Input
         self.url_entry = ctk.CTkEntry(self, placeholder_text="Paste YouTube or Playlist URL here...", width=500, height=40)
@@ -298,6 +320,28 @@ class App(ctk.CTk):
     def finish_download(self, message, color):
         self.download_button.configure(state="normal", text="START DOWNLOAD")
         self.status_label.configure(text=message, text_color=color)
+
+    def open_releases(self):
+        webbrowser.open(RELEASES_PAGE)
+
+    def check_for_updates(self):
+        try:
+            # Use urllib to avoid adding extra dependencies like requests
+            headers = {'User-Agent': 'YT-Media-Downloader-App'}
+            req = urllib.request.Request(REPO_URL, headers=headers)
+            with urllib.request.urlopen(req, timeout=5) as response:
+                data = json.loads(response.read().decode())
+                latest_tag = data.get("tag_name", "").replace("v", "")
+                
+                if latest_tag and version.parse(latest_tag) > version.parse(VERSION):
+                    self.latest_version = latest_tag
+                    self.after(0, self.show_update_notification)
+        except Exception as e:
+            print(f"Update check failed: {e}")
+
+    def show_update_notification(self):
+        self.update_button.configure(text=f"🚀 Update to v{self.latest_version} Available!")
+        self.update_button.pack(pady=(5, 5), before=self.url_entry)
 
 if __name__ == "__main__":
     app = App()

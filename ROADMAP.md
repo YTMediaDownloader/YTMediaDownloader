@@ -15,13 +15,15 @@ This document outlines the planned features and enhancements for future versions
 
 ### 🎯 Quality of Life Updates
 
+- [x] **Live Progress Stats** (v1.1.0)
+- [x] **M4A Thumbnail Support** (v1.1.0)
 - [ ] **Video Resolution Selector**  
   Add granular control over video downloads to choose between 4K, 1080p, 720p, etc., instead of defaulting to the highest available.
 
 - [ ] **Custom Naming Conventions**  
   Allow users to customize the output filename structure (e.g., `[Artist] - [Title].mp3` vs `[Title].mp3`).
 
-- [ ] **In-App Auto Updater**  
+- [x] **In-App Auto Updater**  
   Background checks for new GitHub releases, prompting you directly in the app when a new `.exe` is available.
 
 ---
