@@ -2,3 +2,4 @@ customtkinter
 yt-dlp
 mutagen
 packaging
+tkinterdnd2

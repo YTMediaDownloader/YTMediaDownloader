@@ -9,6 +9,12 @@ import urllib.request
 import webbrowser
 from packaging import version
 
+try:
+    from tkinterdnd2 import TkinterDnD, DND_TEXT, DND_ALL
+    DND_AVAILABLE = True
+except ImportError:
+    DND_AVAILABLE = False
+
 VERSION = "2.0.0"
 HISTORY_FILE = os.path.join(os.getcwd(), '.download_history.txt')
 CONFIG_FILE = os.path.join(os.getcwd(), 'config.json')
@@ -115,9 +121,11 @@ class SettingsWindow(ctk.CTkToplevel):
         self.destroy()
 
 
-class App(ctk.CTk):
+class App(ctk.CTk, TkinterDnD.DnDWrapper if DND_AVAILABLE else object):
     def __init__(self):
         super().__init__()
+        if DND_AVAILABLE:
+            self.TkdndVersion = TkinterDnD._require(self)
 
         self.title("YT Media Downloader")
         self.geometry("750x800")
@@ -210,6 +218,15 @@ class App(ctk.CTk):
         self.url_label.pack(pady=(5, 0), padx=20, anchor="w")
         self.url_textbox = ctk.CTkTextbox(self, height=80, border_width=2)
         self.url_textbox.pack(pady=(3, 8), padx=20, fill="x")
+
+        # Drag-and-drop support
+        if DND_AVAILABLE:
+            try:
+                inner_text = self.url_textbox._textbox
+                inner_text.drop_target_register(DND_ALL)
+                inner_text.dnd_bind('<<Drop>>', self._on_drop)
+            except Exception:
+                pass
 
         # Main 2-Column Frame
         self.main_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -323,6 +340,22 @@ class App(ctk.CTk):
                                              height=50, font=ctk.CTkFont(size=16, weight="bold"),
                                              command=self.start_download_thread)
         self.download_button.pack(pady=5, fill="x")
+
+    # =============================================
+    # DRAG-AND-DROP HANDLER
+    # =============================================
+    def _on_drop(self, event):
+        """Handle drag-and-drop data into the URL queue."""
+        data = event.data.strip()
+        # Strip curly braces that tkdnd sometimes wraps around paths/URLs
+        if data.startswith('{') and data.endswith('}'):
+            data = data[1:-1]
+        # Ensure we start on a new line if there's existing text
+        current = self.url_textbox.get("1.0", "end-1c")
+        if current and not current.endswith('\n'):
+            self.url_textbox.insert("end", "\n")
+        self.url_textbox.insert("end", data)
+        return event.action
 
     # =============================================
     # UI STATE MANAGEMENT
